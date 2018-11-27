@@ -18,50 +18,79 @@ public class FracCalc {
     	console.close();
     	}
     }
-    
-    // ** IMPORTANT ** DO NOT DELETE THIS FUNCTION.  This function will be used to test your code
-    // This function takes a String 'input' and produces the result
-    //
-    // input is a fraction string that needs to be evaluated.  For your program, this will be the user input.
-    //      e.g. input ==> "1/2 + 3/4"
-    //        
-    // The function should return the result of the fraction after it has been calculated
-    //      e.g. return ==> "1_1/4"
-   
+  
     public static String produceAnswer(String input){ 
     	String[] expression = input.split(" "); //separating the operands and operators
     	String operand1 = expression[0]; 
     	String operator = expression[1];
     	String operand2 = expression[2]; 
-    	return parseFractions(operand1, operand2);
+    	int[] op1 = parseOperands(operand1);
+    	int[] op2 = parseOperands(operand2);
+    	doMath(op1, op2, operator);
+    	return "";
     }
-    
-    public static String parseFractions(String operand1, String operand2) {
-    	String[] splitoperand1 = operand1.split("_");
-    	String[] splitoperand2 = operand2.split("_");
-    	String whole1 = splitoperand1[0];
-    	String whole2 = splitoperand2[0];
-    	String[] splitfrac1 = splitoperand1[1].split("/");
-    	String[] splitfrac2 = splitoperand2[1].split("/");
-    	String numerator1 = splitfrac1[0];
-    	String denominator1 = splitfrac1[1];
-    	String numerator2 = splitfrac2[0];
-    	String denominator2 = splitfrac2[1];
-    	return "whole:" + whole2 + " numerator:" + numerator2 + " denominator:" + denominator2;
-    	
-    	//convert mixed numbers to improper fractions
-        
-       // doMath(frac1, frac2, operator);
-       // return "";
-        //reduce and make mixed numbers out of answer
-        //return String (.toString from an int) answer
+ 
+    public static int[] parseOperands(String operand) {
+    	String whole;
+    	String numerator;
+    	String denominator;
+    	String[] splitOperand = operand.split("_");
+    	if (splitOperand.length == 1) { 
+        	String[] splitFrac = splitOperand[0].split("/");
+        	if (splitFrac.length == 1) { //no fraction
+        		whole = splitFrac[0];
+        		numerator = "0";
+        		denominator = "1";
+        	}
+        	else { //no whole, no fraction
+        		whole = "0";
+        		numerator = splitFrac[0];
+            	denominator = splitFrac[1];
+        	}
     	}
+    	else { //normal mixed number, with both a whole and a fraction
+        	whole = splitOperand[0];
+        	String fraction = splitOperand[1];
+        	String [] splitFrac = fraction.split("/");
+        		numerator = splitFrac[0];
+        		denominator = splitFrac[1];
+    	}
+    	return intArray(whole, numerator, denominator);
+	//	return "whole:" + whole + " numerator:" + numerator + " denominator:" + denominator;
+    }
+
+    public static int[] intArray(String whole, String numerator, String denominator) {
+    	int parseWhole = Integer.parseInt(whole);
+    	int parseNum = Integer.parseInt(numerator);	
+    	int parseDenom = Integer.parseInt(denominator);	
+    	int[] fracParts = {parseWhole, parseNum, parseDenom};
+		return fracParts;
     }
     
-    //public static int doMath(int frac1, int frac2, String operator) {
-    //	int answer; 
-    //	if(operator.equals("+")) {
-    //		
-	//	return answer;
-    //}
-     
+    public static int doMath(int[] op1, int[] op2, String operator) {
+        int answer;
+        int whole1 = op1[0];
+        int num1 = op1[1];
+        int denom1 = op1[2];
+        int whole2 = op2[0];
+        int num2 = op2[1];
+        int denom2 = op2[2];
+        if(operator.equals("+")) {
+        	int newdenom = commonDenominator(denom1, denom2);
+        }
+        if(operator.equals("-")) {
+        }
+        if(operator.equals("*")) {
+        }
+        if(operator.equals("/")) {
+        }
+		return 2;
+         
+    }
+    
+    public static int commonDenominator(int denom1, int denom2) {
+    	int common = denom1 * denom2;
+    	return common;
+    }
+}
+   
