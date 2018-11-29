@@ -9,14 +9,16 @@ import java.util.*;
 
 public class FracCalc {
     public static void main(String[] args){
-    	Scanner console = new Scanner(System.in);
+    	Scanner userInput = new Scanner(System.in);
     	System.out.println("Please input the fraction expression you would like to evaluate:");
-    	String input = console.nextLine();
+     	String input = userInput.nextLine();
     	
     	while (!input.equals("quit")) {
     		System.out.println(produceAnswer(input));
-    	console.close();
+    		System.out.println("Do you want to keep going? Type \"quit\" to end.");
+			input = userInput.nextLine();
     	}
+    	userInput.close();
     }
   
     public static String produceAnswer(String input){ 
@@ -26,8 +28,8 @@ public class FracCalc {
     	String operand2 = expression[2]; 
     	int[] op1 = parseOperands(operand1);
     	int[] op2 = parseOperands(operand2);
-    	doMath(op1, op2, operator);
-    	return "";
+    	String finalanswer = doMath(op1, op2, operator);
+    	return finalanswer;
     }
  
     public static int[] parseOperands(String operand) {
@@ -56,7 +58,6 @@ public class FracCalc {
         		denominator = splitFrac[1];
     	}
     	return intArray(whole, numerator, denominator);
-	//	return "whole:" + whole + " numerator:" + numerator + " denominator:" + denominator;
     }
 
     public static int[] intArray(String whole, String numerator, String denominator) {
@@ -67,30 +68,59 @@ public class FracCalc {
 		return fracParts;
     }
     
-    public static int doMath(int[] op1, int[] op2, String operator) {
-        int answer;
-        int whole1 = op1[0];
-        int num1 = op1[1];
-        int denom1 = op1[2];
-        int whole2 = op2[0];
-        int num2 = op2[1];
-        int denom2 = op2[2];
+    public static String doMath(int[] op1, int[] op2, String operator) {
+    	int[] imprOperand1 = toImproperFrac(op1[0], op1[1], op1[2]); //arrays breaking apart parts of each operand as an improper fraction
+    	int[] imprOperand2 = toImproperFrac(op2[0], op2[1], op2[2]); 
+        String answer = "";
+        
         if(operator.equals("+")) {
-        	int newdenom = commonDenominator(denom1, denom2);
+        	int numAnswer = (imprOperand1[0]*imprOperand2[1])+(imprOperand2[0]*imprOperand1[1]); 
+        	int denomAnswer = commonDenominator(imprOperand1[1], imprOperand2[1]); //common denominator found
+        	String mixed = toMixedNum(numAnswer, denomAnswer);
+        	answer += mixed;
         }
-        if(operator.equals("-")) {
+        
+        else  if(operator.equals("-")) {
+        	int numAnswer = (imprOperand1[0]*imprOperand2[1])-(imprOperand2[0]*imprOperand1[1]);
+        	int denomAnswer = commonDenominator(imprOperand1[1], imprOperand2[1]); //common denominator found
+        	String mixed = toMixedNum(numAnswer, denomAnswer);
+        	answer += mixed;
         }
-        if(operator.equals("*")) {
+        
+        else if(operator.equals("*")) {
+        	int numAnswer = imprOperand1[0] * imprOperand2[0];
+        	int denomAnswer = imprOperand1[1] * imprOperand2[1];
+        	String mixed = toMixedNum(numAnswer, denomAnswer);
+        	answer += mixed;
         }
-        if(operator.equals("/")) {
+        
+        else if(operator.equals("/")) {
+        	int numAnswer = imprOperand1[0] * imprOperand2[1];
+        	int denomAnswer = imprOperand1[1] * imprOperand2[0];
+        	String mixed = toMixedNum(numAnswer, denomAnswer);
+        	answer += mixed;
         }
-		return 2;
-         
+		return answer;
     }
     
     public static int commonDenominator(int denom1, int denom2) {
     	int common = denom1 * denom2;
     	return common;
     }
+    
+	public static int[] toImproperFrac(int wholenum, int numerator, int denominator) { //converts mixed number to improper fraction
+		int answernumerator;
+		answernumerator= (wholenum*denominator)+numerator;
+		int[] answer = {answernumerator, denominator};
+		return answer; 
+	}
+	
+	public static String toMixedNum(int num, int denom) { //converts improper to mixed fraction
+		String answer;
+		int wholenum = (num/denom);
+		int newnumer = (num%denom);
+		answer = (wholenum+ "_" + newnumer+"/"+denom); 
+		return answer; 
+	}
 }
    
