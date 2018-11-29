@@ -23,13 +23,11 @@ public class FracCalc {
   
     public static String produceAnswer(String input){ 
     	String[] expression = input.split(" "); //separating the operands and operators
-    	String operand1 = expression[0]; 
     	String operator = expression[1];
-    	String operand2 = expression[2]; 
-    	int[] op1 = parseOperands(operand1);
-    	int[] op2 = parseOperands(operand2);
-    	String finalanswer = doMath(op1, op2, operator);
-    	return finalanswer;
+    	int[] op1 = parseOperands(expression[0]);
+    	int[] op2 = parseOperands(expression[2]);
+    	int[] answerArray = parseOperands(doMath(op1, op2, operator));
+    	return answerArray[1] + "/" + answerArray[2];
     }
  
     public static int[] parseOperands(String operand) {
@@ -37,7 +35,7 @@ public class FracCalc {
     	String numerator;
     	String denominator;
     	String[] splitOperand = operand.split("_");
-    	if (splitOperand.length == 1) { 
+    	if (splitOperand.length == 1) {
         	String[] splitFrac = splitOperand[0].split("/");
         	if (splitFrac.length == 1) { //no fraction
         		whole = splitFrac[0];
@@ -76,29 +74,25 @@ public class FracCalc {
         if(operator.equals("+")) {
         	int numAnswer = (imprOperand1[0]*imprOperand2[1])+(imprOperand2[0]*imprOperand1[1]); 
         	int denomAnswer = commonDenominator(imprOperand1[1], imprOperand2[1]); //common denominator found
-        	String mixed = toMixedNum(numAnswer, denomAnswer);
-        	answer += mixed;
+        	answer = numAnswer + "/" + denomAnswer;
         }
         
         else  if(operator.equals("-")) {
         	int numAnswer = (imprOperand1[0]*imprOperand2[1])-(imprOperand2[0]*imprOperand1[1]);
         	int denomAnswer = commonDenominator(imprOperand1[1], imprOperand2[1]); //common denominator found
-        	String mixed = toMixedNum(numAnswer, denomAnswer);
-        	answer += mixed;
+        	answer = numAnswer + "/" + denomAnswer;
         }
         
         else if(operator.equals("*")) {
         	int numAnswer = imprOperand1[0] * imprOperand2[0];
         	int denomAnswer = imprOperand1[1] * imprOperand2[1];
-        	String mixed = toMixedNum(numAnswer, denomAnswer);
-        	answer += mixed;
+        	answer = numAnswer + "/" + denomAnswer;
         }
         
         else if(operator.equals("/")) {
         	int numAnswer = imprOperand1[0] * imprOperand2[1];
         	int denomAnswer = imprOperand1[1] * imprOperand2[0];
-        	String mixed = toMixedNum(numAnswer, denomAnswer);
-        	answer += mixed;
+        	answer = numAnswer + "/" + denomAnswer;
         }
 		return answer;
     }
@@ -126,12 +120,33 @@ public class FracCalc {
 		return answer; 
 	}
 	
-	public static double absValue(double a) { //returns absolute value of input
-		if (a<0) {
-			return (a*-1);
+	public static boolean isDivisibleBy(int dividend, int divisor) { //returns true if a is divisible by b
+		if (divisor==0) throw new IllegalArgumentException("numbers cannot be divided by zero as it is undefined");
+		if (dividend%divisor == 0) {
+	    return true;
 		}
-			else
-				return a;
+		else
+		return false;
 	}
+	
+	public static int gcf(int a, int b){  //returns the greatest common denominator of the two inputed numbers
+	    int answer = a;
+	    if(a>b) {
+	    for(int i = b; b>=1; i--) {
+	    	if(isDivisibleBy(a, i) && isDivisibleBy(b, i)) {
+	    		return i; 
+	    		} 
+	    	}
+	    }
+	    else if(a<b) {
+		for(int i = a; a>=1; i--) {
+			if((isDivisibleBy(a,i)) && (isDivisibleBy(b,i))) {
+				return i;
+			}
+		}
+	}
+	return answer;
+	}
+	
 }
    
