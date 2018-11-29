@@ -109,6 +109,9 @@ public class FracCalc {
     }
     
 	public static int[] toImproperFrac(int wholenum, int numerator, int denominator) { //converts mixed number to improper fraction
+		 if (wholenum < 0 && numerator > 0) {//negative whole numbers, stays negative when converted to improper fractions
+			  numerator = numerator * -1;
+		   }
 		int answernumerator;
 		answernumerator= (wholenum*denominator)+numerator;
 		int[] answer = {answernumerator, denominator};
@@ -121,6 +124,14 @@ public class FracCalc {
 		int newnumer = (num%denom);
 		answer = (wholenum+ "_" + newnumer+"/"+denom); 
 		return answer; 
+	}
+	
+	public static double absValue(double a) { //returns absolute value of input
+		if (a<0) {
+			return (a*-1);
+		}
+			else
+				return a;
 	}
 }
    
