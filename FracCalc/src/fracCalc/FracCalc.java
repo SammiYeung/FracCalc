@@ -27,7 +27,8 @@ public class FracCalc {
     	int[] op1 = parseOperands(expression[0]);
     	int[] op2 = parseOperands(expression[2]);
     	int[] answerArray = parseOperands(doMath(op1, op2, operator));
-    	return answerArray[1] + "/" + answerArray[2];
+    	int gcf = gcf(answerArray[1], answerArray[2]);
+    	return answerArray[1]/gcf + "/" + answerArray[2]/gcf;
     }
  
     public static int[] parseOperands(String operand) {
@@ -106,9 +107,7 @@ public class FracCalc {
 		 if (wholenum < 0 && numerator > 0) {//negative whole numbers, stays negative when converted to improper fractions
 			  numerator = numerator * -1;
 		   }
-		int answernumerator;
-		answernumerator= (wholenum*denominator)+numerator;
-		int[] answer = {answernumerator, denominator};
+		int[] answer = {(wholenum*denominator)+numerator, denominator};
 		return answer; 
 	}
 	
@@ -131,22 +130,19 @@ public class FracCalc {
 	
 	public static int gcf(int a, int b){  //returns the greatest common denominator of the two inputed numbers
 	    int answer = a;
-	    if(a>b) {
-	    for(int i = b; b>=1; i--) {
-	    	if(isDivisibleBy(a, i) && isDivisibleBy(b, i)) {
-	    		return i; 
-	    		} 
+	    a = Math.abs(a);
+	    b = Math.abs(b);
+	    if (a == 0) {
+	    	answer = 0;
+	    }
+	    else {
+	    	for(int i = a; i>=1; i--) {
+	    		if(isDivisibleBy(a, i) && isDivisibleBy(b, i)) {
+	    			answer = i; 
+	    			i = 0;
+	    		}
 	    	}
 	    }
-	    else if(a<b) {
-		for(int i = a; a>=1; i--) {
-			if((isDivisibleBy(a,i)) && (isDivisibleBy(b,i))) {
-				return i;
-			}
-		}
+		return answer;
 	}
-	return answer;
-	}
-	
 }
-   
